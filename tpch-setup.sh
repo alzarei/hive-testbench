@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -x
-
 function usage {
 	echo "Usage: tpch-setup.sh scale_factor [temp_directory]"
 	exit 1
@@ -15,15 +14,15 @@ function runcommand {
 	fi
 }
 
-if [ ! -f tpch-gen/target/tpch-gen-1.0-SNAPSHOT.jar ]; then
-	echo "Please build the data generator with ./tpch-build.sh first"
-	exit 1
-fi
-which hive > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-	echo "Script must be run where Hive is installed"
-	exit 1
-fi
+# if [ ! -f tpch-gen/target/tpch-gen-1.0-SNAPSHOT.jar ]; then
+	# echo "Please build the data generator with ./tpch-build.sh first"
+	# exit 1
+# fi
+# which hive > /dev/null 2>&1
+# if [ $? -ne 0 ]; then
+	# echo "Script must be run where Hive is installed"
+	# exit 1
+# fi
 
 # Tables in the TPC-H schema.
 TABLES="part partsupp supplier customer orders lineitem nation region"
@@ -32,9 +31,9 @@ TABLES="part partsupp supplier customer orders lineitem nation region"
 SCALE=$1
 DIR=$2
 BUCKETS=13
-if [ "X$DEBUG_SCRIPT" != "X" ]; then
-	set -x
-fi
+# if [ "X$DEBUG_SCRIPT" != "X" ]; then
+	# set -x
+# fi
 
 # Sanity checking.
 if [ X"$SCALE" = "X" ]; then
@@ -64,7 +63,7 @@ fi
 
 # Create the text/flat tables as external tables. These will be later be converted to ORCFile.
 echo "Loading text data into external tables."
-runcommand "hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/alltables.sql -d DB=tpch_text_${SCALE} -d LOCATION=${DIR}/${SCALE}"
+runcommand "hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/alltables.sql -d DB=tpch_text_${SCALE} -d LOCATION=${DIR}/${SCALE}G"
 
 # Create the optimized tables.
 # i=1
