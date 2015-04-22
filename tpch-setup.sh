@@ -65,7 +65,7 @@ fi
 echo "Loading text data into external tables."
 runcommand "hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/alltables.sql -d DB=tpch_text_${SCALE} -d LOCATION=${DIR}/${SCALE}G"
 
-Create the optimized tables.
+# Create the optimized tables.
 i=1
 total=8
 DATABASE=tpch_flat_orc_${SCALE}
