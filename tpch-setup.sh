@@ -65,23 +65,23 @@ fi
 echo "Loading text data into external tables."
 runcommand "hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/alltables.sql -d DB=tpch_text_${SCALE} -d LOCATION=${DIR}/${SCALE}G"
 
-# Create the optimized tables.
-# i=1
-# total=8
-# DATABASE=tpch_flat_orc_${SCALE}
-# for t in ${TABLES}
-# do
-	# echo "Optimizing table $t ($i/$total)."
-	# COMMAND="hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/${t}.sql \
-	    # -d DB=${DATABASE} \
-	    # -d SOURCE=tpch_text_${SCALE} -d BUCKETS=${BUCKETS} \
-	    # -d FILE=orc"
-	# runcommand "$COMMAND"
-	# if [ $? -ne 0 ]; then
-		# echo "Command failed, try 'export DEBUG_SCRIPT=ON' and re-running"
-		# exit 1
-	# fi
-	# i=`expr $i + 1`
-# done
+Create the optimized tables.
+i=1
+total=8
+DATABASE=tpch_flat_orc_${SCALE}
+for t in ${TABLES}
+do
+	echo "Optimizing table $t ($i/$total)."
+	COMMAND="hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/${t}.sql \
+	    -d DB=${DATABASE} \
+	    -d SOURCE=tpch_text_${SCALE} -d BUCKETS=${BUCKETS} \
+	    -d FILE=orc"
+	runcommand "$COMMAND"
+	if [ $? -ne 0 ]; then
+		echo "Command failed, try 'export DEBUG_SCRIPT=ON' and re-running"
+		exit 1
+	fi
+	i=`expr $i + 1`
+done
 
 echo "Data loaded into database ${DATABASE}."
