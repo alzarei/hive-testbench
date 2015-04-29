@@ -70,10 +70,10 @@ runcommand "hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/alltables.sql -d
 i=1
 total=8
 DATABASE=tpch_flat_orc_${SCALE}
-# for t in ${TABLES}
-# do
-	  echo "Optimizing table lineitem ($i/$total)."
-	  COMMAND="hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/lineitem.sql \
+for t in ${TABLES}
+do
+	echo "Optimizing table $t ($i/$total)."
+	COMMAND="hive -i settings/load-flat.sql -f ddl-tpch/bin_flat/${t}.sql \
 	    -d DB=${DATABASE} \
 	    -d SOURCE=tpch_text_${SCALE} -d BUCKETS=${BUCKETS} \
 	    -d FILE=orc"
@@ -83,6 +83,6 @@ DATABASE=tpch_flat_orc_${SCALE}
 		exit 1
 	fi
 	i=`expr $i + 1`
-# done
+  done
 
 echo "Data loaded into database ${DATABASE}."
